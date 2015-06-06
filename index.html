@@ -1,10 +1,39 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <style type="text/css">
+
+    #overlay {
+
+          position: absolute;
+          top: 10%;
+          left: 20%;
+          width: 60%;
+          line-height: 20px;
+          height: 80%;
+          color:white;
+          background-color: #000;
+          text-align: center;
+          padding: 5%;
+          border-radius: 5px;
+        
+          z-index: 10;
+          box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+    }
+
+    .user-stream {
+      display:none;
+    }
+
+    </style>
+
+
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
   </head>
   <body>
+    <div id="overlay" class="user-stream">
+    </div>
     <div class='navigation'>
       <button type='button' class='refresh-tweets'>Refresh</button>
     </div>
@@ -13,6 +42,8 @@
     <script>
 
     var indexTracker;
+    var $userStream = $('.user-stream');
+    var streamVisibile = false;
 
       $(document).ready(function(){
         
@@ -20,17 +51,42 @@
         // var $body = $('body');
         // $body.html('');
 
-        // for testing a single round
-        // var startIndex = streams.home.length - 1;
-        // addNewTweets(startIndex,0);
-
         scheduleRefreshTweets(0,1);  //second item is to limit number of rounds for testing purposes. To be removed
 
         $('.navigation').on('click','.refresh-tweets', function() {return scheduleRefreshTweets(indexTracker)});
 
-        
+        $('.tweets-container').on('click','.user', function(event) {
+          event.stopPropagation();
+          var thisUser = $(this).text();
+          updateUserStream(thisUser);
+          $('.user-stream').show();
+          streamVisibile = true;
+          });
+
+        $(document).on('click',function() {
+          if(streamVisibile) {
+            $userStream.hide();
+            streamVisibile = false;  
+          }
+        });
+
 
       }); //end of ready function
+
+
+      var updateUserStream = function(username) {
+        var userStream = streams.users[username];
+
+        $userStream.empty();
+
+        for(i=0; i< userStream.length; i++) {
+          var tweet = userStream[i];
+          var $tweet = createTweetElement(tweet.user, tweet.message, tweet.created_at);
+          $userStream.prepend($tweet);
+        }
+      }
+
+
 
       var addNewTweets = function(startIndex,endIndex) {
         indexTracker = endIndex; //updates Global variable
@@ -52,13 +108,12 @@
       var createTweetElement = function (username,message,timestamp) {
         var container = $('<div class="tweet"></div>');
 
-        var $user = createSpanElement('@' + username,'user');
+        var $user = createSpanElement(username,'user');
         var $message = createSpanElement(': ' + message,'message');
         var $timestamp = createSpanElement(' -' + timestamp,'timestamp');
-        // var user = $('<span class= "user">'+ username'</span>');
-        // var message = $('<span class= "message">'+ message'</span>');
 
-        container.append($user)
+        container.append('@')
+                 .append($user)
                  .append($message)
                  .append($timestamp);
         return container;

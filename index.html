@@ -37,11 +37,34 @@
         var index = startIndex;
         while(index >= endIndex){
           var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($('.tweets-container'));
+
+          var $tweet = createTweetElement(tweet.user, tweet.message, tweet.created_at);
+
+          // var $tweet = $('<div></div>');
+          // $tweet.text('@' + tweet.user + ': ' + tweet.message);
+
+          $tweet.prependTo($('.tweets-container'));
           index -= 1;
         }
+      }
+
+      var createTweetElement = function (username,message,timestamp) {
+        var container = $('<div class="tweet"></div>');
+
+        var $user = createSpanElement('@' + username,'user');
+        var $message = createSpanElement(': ' + message,'message');
+        var $timestamp = createSpanElement(' -' + timestamp,'timestamp');
+        // var user = $('<span class= "user">'+ username'</span>');
+        // var message = $('<span class= "message">'+ message'</span>');
+
+        container.append($user)
+                 .append($message)
+                 .append($timestamp);
+        return container;
+      }
+
+      var createSpanElement = function(value, classValue) {
+        return $('<span class =' +  classValue + '>' + value + '</span>');
       }
 
       var scheduleRefreshTweets = function(endIndex,roundsLeft) {

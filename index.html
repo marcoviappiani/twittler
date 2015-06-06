@@ -34,6 +34,7 @@
 
       var addNewTweets = function(startIndex,endIndex) {
         indexTracker = startIndex; //updates Global variable
+        //alert(indexTracker); //for testing purposes
         var index = startIndex;
         while(index >= endIndex){
           var tweet = streams.home[index];
@@ -69,6 +70,7 @@
 
       var scheduleRefreshTweets = function(endIndex,roundsLeft) {
         var startIndex = streams.home.length - 1;
+        $('<br>').prependTo($('.tweets-container'));
         addNewTweets(startIndex,endIndex);
 
         //alert(roundsLeft); For testing purposes
@@ -77,7 +79,7 @@
         if(roundsLeft > 0) {
           roundsLeft -- ;
           setTimeout(function () {
-            return scheduleRefreshTweets(endIndex, roundsLeft);
+            return scheduleRefreshTweets(startIndex + 1, roundsLeft);
           }, 1500);        
         }
       }

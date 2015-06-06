@@ -33,10 +33,10 @@
       }); //end of ready function
 
       var addNewTweets = function(startIndex,endIndex) {
-        indexTracker = startIndex; //updates Global variable
+        indexTracker = endIndex; //updates Global variable
         //alert(indexTracker); //for testing purposes
         var index = startIndex;
-        while(index >= endIndex){
+        while(index <= endIndex){
           var tweet = streams.home[index];
 
           var $tweet = createTweetElement(tweet.user, tweet.message, tweet.created_at);
@@ -45,8 +45,8 @@
           // $tweet.text('@' + tweet.user + ': ' + tweet.message);
 
           $tweet.prependTo($('.tweets-container'));
-          index -= 1;
-        }
+          index += 1;
+        }  
       }
 
       var createTweetElement = function (username,message,timestamp) {
@@ -68,8 +68,8 @@
         return $('<span class =' +  classValue + '>' + value + '</span>');
       }
 
-      var scheduleRefreshTweets = function(endIndex,roundsLeft) {
-        var startIndex = streams.home.length - 1;
+      var scheduleRefreshTweets = function(startIndex,roundsLeft) {
+        var endIndex = streams.home.length - 1;
         $('<br>').prependTo($('.tweets-container'));
         addNewTweets(startIndex,endIndex);
 
@@ -79,7 +79,7 @@
         if(roundsLeft > 0) {
           roundsLeft -- ;
           setTimeout(function () {
-            return scheduleRefreshTweets(startIndex + 1, roundsLeft);
+            return scheduleRefreshTweets(endIndex + 1, roundsLeft);
           }, 1500);        
         }
       }

@@ -27,6 +27,10 @@
       background-color: #e1e8ed;
     }
 
+    .refresh-tweets {
+      display: none;
+    }
+
     button:hover {
       text-decoration: underline;
     }
@@ -130,7 +134,7 @@
         // var $body = $('body');
         // $body.html('');
 
-        scheduleRefreshTweets(0,1);  //second item is to limit number of rounds for testing purposes. To be removed
+        scheduleRefreshTweets(0,10);  //starts off automatic refresh. second item is to limit number of rounds and preventing infinite update.
 
         $('.navigation').on('click','.refresh-tweets', function() {return scheduleRefreshTweets(indexTracker)});
 
@@ -217,7 +221,12 @@
           roundsLeft -- ;
           setTimeout(function () {
             return scheduleRefreshTweets(endIndex + 1, roundsLeft);
-          }, 1500);        
+          }, 2000);
+
+          if(roundsLeft === 0) {
+            $('.refresh-tweets').fadeIn();
+          }
+
         }
       }
 

@@ -83,7 +83,7 @@
 
           position: absolute;
           top: 10%;
-          left: 10%;
+          left: 50%;
           right: 10%;
           width: 80%; not sure why if I specify width it doesn't come out well  
           line-height: 20px;
@@ -120,7 +120,7 @@
 
     // To add: better styling, animations (toggle, fade, slide)
 
-    var indexTracker;
+    var indexTracker = -1;
     var $userStream = $('.user-stream');
     var streamVisibile = false;
 
@@ -168,7 +168,7 @@
 
 
       var addNewTweets = function(startIndex,endIndex) {
-        indexTracker = endIndex; //updates Global variable
+        indexTracker = endIndex + 1; //updates Global variable
         //alert(indexTracker); //for testing purposes
         var index = startIndex;
         while(index <= endIndex){
@@ -207,11 +207,12 @@
         var endIndex = streams.home.length - 1;
         //$('<br>').prependTo($('.tweets-container'));  //for testing, to be removed
         
-        addNewTweets(startIndex,endIndex);
+        if(endIndex > startIndex) {
+          addNewTweets(startIndex,endIndex);
+        }
 
         //alert(roundsLeft); For testing purposes
         
-
         if(roundsLeft > 0) {
           roundsLeft -- ;
           setTimeout(function () {
